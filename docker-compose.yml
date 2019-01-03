@@ -1,0 +1,17 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres:latest'
+  redis:
+    images: 'redis:latest'
+  server:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
+    volumes:
+      # don't try to overhide the folder
+      - /app/node_modules
+      # map files from ./server to /app inside container
+      # every time that something asks to /app inside the container
+      # it will search in ./server from current directory
+      - ./server:/app
