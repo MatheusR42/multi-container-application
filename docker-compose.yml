@@ -3,15 +3,37 @@ services:
   postgres:
     image: 'postgres:latest'
   redis:
-    images: 'redis:latest'
+    image: 'redis:latest'
   server:
     build:
       dockerfile: Dockerfile.dev
       context: ./server
     volumes:
-      # don't try to overhide the folder
+      # don't try to overhide the node_modules folder
       - /app/node_modules
       # map files from ./server to /app inside container
-      # every time that something asks to /app inside the container
+      # every time that something asks to a file in /app inside the container
       # it will search in ./server from current directory
       - ./server:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=postgres_password
+      - PGPORT=5432
+    client:
+      build:
+        dockerfile: Dockerfile.dev
+        context: ./client
+      volumes:
+        - /app/node_modules
+        - ./client:/app
+      workers:
+        build:
+          dockerfile: Dockerfile.dev
+          context: ./workers
+        volumes:
+          - /app/node_modules
+          - ./worker:/app
