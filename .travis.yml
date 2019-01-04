@@ -1,0 +1,16 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t matheusr42/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  # -- --coverage is to finish test and return a status (0 if ok everthing else bug)
+  - docker run matheusr42/react-test npm test -- --coverage
+
+after_success:
+  - docker build -t matheusr42/multi-client ./client
+  - docker build -t matheusr42/multi-nginx ./nginx
+  - docker build -t matheusr42/multi-server ./server
+  - docker build -t matheusr42/multi-worker ./worker
