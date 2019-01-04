@@ -2,10 +2,16 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 class Fib extends Component {
-    state = {
-        seenIndexes: [],
-        values: {},
-        index: ''
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            seenIndexes: [],
+            values: {},
+            index: ''
+        }
+
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -35,7 +41,7 @@ class Fib extends Component {
         for (let key in this.state.values) {
             entries.push(
                 <div key={key}>
-                    For index {key} I calculated {this.state.valeus[key]}
+                    For index {key} I calculated {this.state.values[key]}
                 </div>
             )
         }
